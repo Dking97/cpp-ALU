@@ -13,7 +13,7 @@ using namespace std;
 //bool* eightBitCarryGenerate(bool* in1, bool* in2, bool carry);
 //bool carryGenerate(bool in1, bool in2);
 //bool carryPropogate(bool in1, bool in2, bool carry);
-//bool* fullAdder(bool in1, bool in2, bool carry);
+//bool* fullAdder(bool in1, bool in2, bool carry); probably not need this
 
 bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
 bool XOR(bool in1, bool in2);
@@ -34,7 +34,7 @@ int main() { //test function. (for now)
         cin >> in1;
         cin >> in2;
         cin >> carry;
-        bool* full = fullAdder(in1, in2, carry);
+        //bool* full = fullAdder(in1, in2, carry);
         cout << "NOT(1) = " << NOT(in1) << endl;
         cout << "AND(1,2) = " << AND(in1, in2) <<endl;
         cout << "OR(1,2) = " << OR(in1, in2) << endl;
