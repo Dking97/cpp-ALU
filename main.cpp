@@ -15,6 +15,7 @@ using namespace std;
 //bool carryPropogate(bool in1, bool in2, bool carry);
 //bool* fullAdder(bool in1, bool in2, bool carry); probably not need this
 
+bool nextCarry(bool propCarry, bool genCarry, bool lastCarry);
 bool* eightBitCLSums(bool *propCarry, bool *Carrys);
 bool* eightBitCarryLA(bool *propCarry, bool *genCarry, bool Carryin);
 bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
