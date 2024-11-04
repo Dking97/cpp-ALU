@@ -103,7 +103,7 @@ int main() { //test function. (for now)
 bool* CLA(bool* in1, bool* in2, bool* carry) {
     static bool sum[8];
     for (int i = 0; i < 8; i++) {
-        result[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
+        sum[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
     }
     return sum;
 }
