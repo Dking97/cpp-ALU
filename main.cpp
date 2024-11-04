@@ -101,7 +101,7 @@ int main() { //test function. (for now)
      
 //Function definitions go down here.
 
-bool* eightBitCarryProp(bool *in1,bool *in2){
+bool* eightBitCarryPropogate(bool *in1,bool *in2){
     static bool prop[in1.size()];
     for(int i = 0; i < prop.size();i++){
         prop[i] = XOR(in1[i],in2[i]); //the inputs are A and B
