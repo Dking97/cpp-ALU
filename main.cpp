@@ -113,6 +113,7 @@ bool* eightBitCarryPropogate(bool *in1,bool *in2){
     for(int i = 0; i < 8;i++){
         prop[i] = XOR(in1[i],in2[i]); //the inputs are A and B
     }
+    return prop;
 }
 
 
