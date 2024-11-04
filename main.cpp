@@ -100,7 +100,14 @@ int main() { //test function. (for now)
 }
      
 //Function definitions go down here.
-
+bool* CLA(bool* in1, bool* in2, bool* carry) {
+    static bool sum[8];
+    for (int i = 0; i < 8; i++) {
+        result[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
+    }
+    return sum;
+}
+            
 bool* eightBitCarryPropogate(bool *in1,bool *in2){
     static bool prop[in1.size()];
     for(int i = 0; i < prop.size();i++){
