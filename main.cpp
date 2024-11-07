@@ -116,14 +116,10 @@ bool* eightBitCarryPropogate(bool *in1,bool *in2){
     return prop;
 }
 
-bool* CLA_generate(bool* A, bool* B){
-    static bool generate;
-    generate = AND(A,B);
-    return generate;
+bool CLA_generate(bool A, bool B){
+    return AND(A,B);
 }
 
-bool* CLA_propagate(bool* A, bool* B){
-    static bool propagate;
-    generate = XOR(A,B);
-    return propagate;
+bool CLA_propagate(bool A, bool B){ 
+    return XOR(A,B);
 }
