@@ -10,14 +10,14 @@ using namespace std;
 //bool* eightBitCarryLookAheadAdder(bool* in1, bool* in2, bool carry); 
 //bool* eightBitCarryLookAhead(bool* in1, bool* in2, bool carry);
 //bool* eightBitCarryPropogate(bool* in1, bool* in2, bool carry);
-//bool* eightBitCarryGenerate(bool* in1, bool* in2, bool carry);
+bool* eightBitCarryGenerate(bool* in1, bool* in2);
 //bool carryGenerate(bool in1, bool in2);
 //bool carryPropogate(bool in1, bool in2, bool carry);
 //bool* fullAdder(bool in1, bool in2, bool carry); probably not need this
 
 bool nextCarry(bool propCarry, bool genCarry, bool lastCarry);
-bool* eightBitCLSums(bool *propCarry, bool *Carrys);
-bool* eightBitCarryLA(bool *propCarry, bool *genCarry, bool Carryin);
+bool* eightBitCLSums(bool* propCarry, bool* Carrys);
+bool* eightBitCarryLA(bool* propCarry, bool* genCarry, bool Carryin);
 bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
 bool XOR(bool in1, bool in2);
 bool OR(bool in1, bool in2);
@@ -39,17 +39,17 @@ int main() { //test function. (for now)
         cin >> carry;
         //bool* full = fullAdder(in1, in2, carry);
         cout << "NOT(1) = " << NOT(in1) << endl;
-        cout << "AND(1,2) = " << AND(in1, in2) <<endl;
+        cout << "AND(1,2) = " << AND(in1, in2) << endl;
         cout << "OR(1,2) = " << OR(in1, in2) << endl;
         cout << "XOR(1,2) = " << XOR(in1, in2) << endl;
         cout << "fullAdder (1 ,2 ,C) = " << full[0] << full[1] << endl;
         return 0;
     }
-          else if (selection == 2) { //selection 3 lookahead adder
+    else if (selection == 2) { //selection 3 lookahead adder
         bool in1[4];
         bool in2[4];
         bool carry;
-        
+
         cout << "Enter A: " << endl;
         for (int i = 0; i < 8; i++) {
             cin >> in1[i];
@@ -94,11 +94,11 @@ int main() { //test function. (for now)
         for (int i = 0; i < 8; i++) {
             cout << lookAheadAdder[i];
         }
-        cout << endl;   
-     }
-     return 0;
+        cout << endl;
+    }
+    return 0;
 }
-     
+
 //Function definitions go down here.
 bool* CLA(bool* in1, bool* in2, bool* carry) {
     static bool sum[8];
@@ -107,19 +107,27 @@ bool* CLA(bool* in1, bool* in2, bool* carry) {
     }
     return sum;
 }
-            
-bool* eightBitCarryPropogate(bool *in1,bool *in2){
+
+bool* eightBitCarryGenerate(bool* in1, bool* in2) {
+    static bool G[8]; 
+    for (int i = 0; i < 8; i++) {
+        G[i] = CLA_generate(in1[i], in2[i]); 
+    }
+    return G; 
+}
+
+bool* eightBitCarryPropogate(bool* in1, bool* in2) {
     static bool prop[8];
-    for(int i = 0; i < 8;i++){
-        prop[i] = XOR(in1[i],in2[i]); //the inputs are A and B
+    for (int i = 0; i < 8;i++) {
+        prop[i] = XOR(in1[i], in2[i]); //the inputs are A and B
     }
     return prop;
 }
 
-bool CLA_generate(bool A, bool B){
-    return AND(A,B);
+bool CLA_generate(bool A, bool B) {
+    return AND(A, B);
 }
 
-bool CLA_propagate(bool A, bool B){ 
-    return XOR(A,B);
+bool CLA_propagate(bool A, bool B) {
+    return XOR(A, B);
 }
