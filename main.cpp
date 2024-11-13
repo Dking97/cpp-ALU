@@ -131,3 +131,43 @@ bool CLA_generate(bool A, bool B) {
 bool CLA_propagate(bool A, bool B) {
     return XOR(A, B);
 }
+
+
+bool* compare_A_B(bool* in1, bool* in2){
+	bool compare = 0;
+	
+	for(int i = 7; i >= 0; i--){
+		if (NOT(XOR(in1[i], in2[i])) == 1){
+			continue;
+		} else {
+			if (in1[i] > in2[i]){
+				compare = 1;
+				return compare; // A is bigger than B
+			} else {
+				compare = 0;
+				return compare; // B is bigger than A
+			} 
+		}
+	}
+	cout << "A = B" << endl; // only triggers if both A and B are the same
+	return compare; // 0 for B // 1 for A
+	
+}
+
+bool eightBitNOT_A(bool* in1){ // returns Not A
+	static bool NOT_A[8];
+	for(int i = 0; i < 8; i++){
+		NOT_A[i] = NOT(in1[i]);
+		cout << NOT_A[i];
+	}
+	return NOT_A;
+}
+
+bool eightBitNOT_B(bool* in2){ // returns Not B
+	static bool NOT_B[8];
+	for(int i = 0; i < 8; i++){
+		NOT_B[i] = NOT(in2[i]);
+		cout << NOT_B[i];
+	}
+	return NOT_B;
+}
