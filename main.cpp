@@ -171,3 +171,41 @@ bool eightBitNOT_B(bool* in2){ // returns Not B
 	}
 	return NOT_B;
 }
+
+// 11/18/24 im not sure if im doing this right since the mux usually doenst take in a the entire 8 bits, it usually has an individual mux for each bit. - collin
+
+bool replace(bool* in1, bool* in2){
+	for (i = 0; i < 8; i++) { 
+        in1[i] = in2[i]; 
+}
+
+bool selector(bool* in1, bool* in2, bool* selector){ // 
+	static bool S2 = selector[0], S1 = selector[1], S0 = selector[2];
+	static bool SI2 = NOT(S2), SI1 = NOT(S1), SI0 = NOT(SI0);
+	static bool output[8];
+	
+	if(AND(SI2, AND(SI1, SI0))){
+		
+	}
+	else if(AND(SI2, AND(SI1, S0 ))){
+		
+	}
+	else if(AND(SI2, AND(S1 , SI0))){
+		
+	}
+	else if(AND(SI2, AND(S1 , S0 ))){
+		
+	}
+	else if(AND(S2 , AND(SI1, SI0))){
+		replace(output, compare_A_B(in1, in2));
+	}
+	else if(AND(S2 , AND(SI1, S0 ))){
+		replace(output, eightBitNOT_A(in1));
+	}
+	else if(AND(S2 , AND(S1 , SI0))){
+		replace(output, eightBitNOT_B(in2));
+	}
+}
+
+
+
