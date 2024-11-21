@@ -134,23 +134,23 @@ bool CLA_propagate(bool A, bool B) {
 
 
 bool* compare_A_B(bool* in1, bool* in2){
-	bool compare = 0;
+	bool compare[2] = {0};
 	
 	for(int i = 7; i >= 0; i--){
 		if (NOT(XOR(in1[i], in2[i])) == 1){
 			continue;
 		} else {
 			if (in1[i] > in2[i]){
-				compare = 1;
+				compare[1] = 1;
 				return compare; // A is bigger than B
 			} else {
-				compare = 0;
+				compare[1] = 0;
 				return compare; // B is bigger than A
 			} 
 		}
 	}
-	cout << "A = B" << endl; // only triggers if both A and B are the same
-	return compare; // 0 for B // 1 for A
+	compare[0] = 1;
+	return compare; // 00 for B // 01 for A // 10 for B = A
 	
 }
 
