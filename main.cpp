@@ -208,4 +208,44 @@ bool selector(bool* in1, bool* in2, bool* selector){ //
 }
 
 
+//needs to take in the onesCompliment of in
+bool* twosCompliment(bool *in){
+    bool carry = true;
+    for (int i = 0; i < in.size(); i++){
+        if (in[i] == true && carry == true){
+            in[i] = false;
+            carry = true;
+        } else if(in[i] == false && carry == true){
+            in[i] = true;
+            carry = false;
+        }
+    }
+    return in;
+}
 
+bool* subtract(bool *in1, bool* in2){
+    static bool[9] diff;
+
+    //in1>in2 in1 + 2's comp in2 discard MSB
+    if (compare_A_B(in1,in2) == 1){
+        in2 = twosCompliment(eightBitNOT_A(in2));
+        diff = CLA(in1, in2, carrys);
+        diff[0] = 0;
+        return diff;
+    }
+    //in1<in2 in1 + 2's comp in2, 2's comp step 1, add negative sign
+    if(compare_A_B(in1,in2) == 0){
+        in2 = twosCompliment(eightBitNOT_A(in2));
+        diff = CLA(in1, in2, carrys);
+        diff = twosCompliment(eightBitNOT_A(diff));
+        diff[0] = NOT(diff[0]);
+        return diff;
+    } 
+    //in1==in2
+    if(case3){
+        for(int i = 0; i < in1.size();i++){
+            diff[i] = false;
+        }
+    }
+    return diff;
+}
