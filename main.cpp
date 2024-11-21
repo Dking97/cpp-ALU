@@ -227,14 +227,14 @@ bool* subtract(bool *in1, bool* in2){
     static bool[9] diff;
 
     //in1>in2 in1 + 2's comp in2 discard MSB
-    if (compare_A_B(in1,in2) == 1){
+    if (compare_A_B(in1,in2)[1] == 1){
         in2 = twosCompliment(eightBitNOT_A(in2));
         diff = CLA(in1, in2, carrys);
         diff[0] = 0;
         return diff;
     }
     //in1<in2 in1 + 2's comp in2, 2's comp step 1, add negative sign
-    if(compare_A_B(in1,in2) == 0){
+    if(compare_A_B(in1,in2)[1] == 0){
         in2 = twosCompliment(eightBitNOT_A(in2));
         diff = CLA(in1, in2, carrys);
         diff = twosCompliment(eightBitNOT_A(diff));
@@ -242,10 +242,10 @@ bool* subtract(bool *in1, bool* in2){
         return diff;
     } 
     //in1==in2
-    if(case3){
+    if(compare_A_B(in1,in2)[0] == 1){
         for(int i = 0; i < in1.size();i++){
             diff[i] = false;
         }
+	return diff;
     }
-    return diff;
 }
