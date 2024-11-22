@@ -208,7 +208,7 @@ bool selector(bool* in1, bool* in2, bool* selector){ //
 }
 
 
-//needs to take in the onesCompliment of in
+//needs to take in the onesCompliment of in, just NOT in
 bool* twosCompliment(bool *in){
     bool carry = true;
     for (int i = 0; i < in.size(); i++){
