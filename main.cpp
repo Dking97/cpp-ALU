@@ -9,15 +9,20 @@ using namespace std;
 
 //bool* eightBitCarryLookAheadAdder(bool* in1, bool* in2, bool carry); 
 //bool* eightBitCarryLookAhead(bool* in1, bool* in2, bool carry);
-//bool* eightBitCarryPropogate(bool* in1, bool* in2, bool carry);
+bool* eightBitCarryPropogate(bool* in1, bool* in2, bool carry);
 bool* eightBitCarryGenerate(bool* in1, bool* in2);
-//bool carryGenerate(bool in1, bool in2);
-//bool carryPropogate(bool in1, bool in2, bool carry);
+bool CLA_generate(bool in1, bool in2);
+bool CLA_propogate(bool in1, bool in2, bool carry);
 //bool* fullAdder(bool in1, bool in2, bool carry); probably not need this
 
-bool nextCarry(bool propCarry, bool genCarry, bool lastCarry);
-bool* eightBitCLSums(bool* propCarry, bool* Carrys);
-bool* eightBitCarryLA(bool* propCarry, bool* genCarry, bool Carryin);
+bool eightBitNOT_B(bool* in2);
+bool eightBitNOT_A(bool* in1);
+void replace(bool* in1, bool* in2);
+bool* compare_A_B(bool* in1, bool* in2);
+bool selector(bool* in1, bool* in2, bool* selector);
+bool* subtract(bool *in1, bool* in2);
+bool* twosCompliment(bool *in);
+bool* CLA(bool* in1, bool* in2, bool* carry);//returns sums
 bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
 bool XOR(bool in1, bool in2);
 bool OR(bool in1, bool in2);
@@ -134,7 +139,7 @@ bool CLA_propagate(bool A, bool B) {
 
 
 bool* compare_A_B(bool* in1, bool* in2){
-	bool compare[2] = {0};
+	bool compare[3] = {0};
 	
 	for(int i = 7; i >= 0; i--){
 		if (NOT(XOR(in1[i], in2[i])) == 1){
@@ -144,13 +149,13 @@ bool* compare_A_B(bool* in1, bool* in2){
 				compare[1] = 1;
 				return compare; // A is bigger than B
 			} else {
-				compare[1] = 0;
+				compare[2] = 1;
 				return compare; // B is bigger than A
 			} 
 		}
 	}
 	compare[0] = 1;
-	return compare; // 00 for B // 01 for A // 10 for B = A
+	return compare; // 001 for B // 010 for A // 100 for B = A
 	
 }
 
@@ -174,12 +179,12 @@ bool eightBitNOT_B(bool* in2){ // returns Not B
 
 // 11/18/24 im not sure if im doing this right since the mux usually doenst take in a the entire 8 bits, it usually has an individual mux for each bit. - collin
 
-bool replace(bool* in1, bool* in2){
+void replace(bool* in1, bool* in2){
 	for (i = 0; i < 8; i++) { 
         in1[i] = in2[i]; 
 }
 
-bool selector(bool* in1, bool* in2, bool* selector){ // 
+bool selector(bool* in1, bool* in2, bool* selector){ 
 	static bool S2 = selector[0], S1 = selector[1], S0 = selector[2];
 	static bool SI2 = NOT(S2), SI1 = NOT(S1), SI0 = NOT(SI0);
 	static bool output[8];
