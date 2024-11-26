@@ -27,6 +27,35 @@ bool XOR(bool in1, bool in2);
 bool OR(bool in1, bool in2);
 bool NOT(bool in);
 
+//main use this to test functions. (this just gets A B and opCode. write your own test lines.)
+int main() {
+    bool Carry[9] = {0}; // carry 
+    cout << "Enter A: ";
+    string strA;
+    cin >> strA;
+    bool A[8];
+    for (int i = 0; i < 8; i++) {
+        A[i] = (strA[i] == '1');  // Convert '1'/'0' to bool
+    }
+    cout << "Enter B: ";
+    string B_str;
+    cin >> B_str;
+    bool B[8];
+    for (int i = 0; i < 8; i++) {
+        B[i] = (B_str[i] == '1');  // Convert '1'/'0' to bool
+    }
+    cout << "Enter Opcode: ";
+    string opCode_str;
+    cin >> opCode_str;
+    bool opCode[3];
+    for (int i = 0; i < 3; i++) {
+        opCode[i] = (opCode_str[i] == '1');  // Convert '1'/'0' to bool
+    }
+
+    return 0;
+}
+
+
 
 //Function definitions go down here.
 bool* CLA(bool* in1, bool* in2, bool* carry) {
