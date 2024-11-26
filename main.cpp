@@ -7,8 +7,7 @@ using namespace std;
 //         delete // after you define one to use the declaration.
 //               define functions at the bottom! 
 
-//bool* eightBitCarryLookAheadAdder(bool* in1, bool* in2, bool carry); 
-//bool* eightBitCarryLookAhead(bool* in1, bool* in2, bool carry);
+bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0);
 bool* eightBitCarryPropogate(bool* in1, bool* in2, bool carry);
 bool* eightBitCarryGenerate(bool* in1, bool* in2);
 bool CLA_generate(bool in1, bool in2);
@@ -28,81 +27,31 @@ bool XOR(bool in1, bool in2);
 bool OR(bool in1, bool in2);
 bool NOT(bool in);
 
-int main() { //test function. (for now)
-    cout << "test what?" << endl; //menu
-    cout << "1: single bit inputs" << endl;
-    cout << "2: 8-bit lookahead adder" << endl;
-    int selection;
-    cin >> selection;
+bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
+    static bool carry[9];
+    carry[0] = c0;
 
-    if (selection == 1) { //Selection 1: single bit inputs (gates and full adder)
-        bool in1;
-        bool in2;
-        bool carry;
-        cin >> in1;
-        cin >> in2;
-        cin >> carry;
-        //bool* full = fullAdder(in1, in2, carry);
-        cout << "NOT(1) = " << NOT(in1) << endl;
-        cout << "AND(1,2) = " << AND(in1, in2) << endl;
-        cout << "OR(1,2) = " << OR(in1, in2) << endl;
-        cout << "XOR(1,2) = " << XOR(in1, in2) << endl;
-        cout << "fullAdder (1 ,2 ,C) = " << full[0] << full[1] << endl;
-        return 0;
-    }
-    else if (selection == 2) { //selection 3 lookahead adder
-        bool in1[4];
-        bool in2[4];
-        bool carry;
+    carry[1] = generate[0] + propogate[0] * carry[0];
+    
+    carry[2] = generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]);
 
-        cout << "Enter A: " << endl;
-        for (int i = 0; i < 8; i++) {
-            cin >> in1[i];
-        }
-        cout << "Enter B: " << endl;
-        for (int i = 0; i < 8; i++) {
-            cin >> in2[i];
-        }
-        cout << "Enter carry: " << endl;
-        cin >> carry;
-        cout << "A: ";
-        for (int i = 0; i < 8; i++) {
-            cout << in1[i];
-        }
-        cout << endl;
-        cout << "B: ";
-        for (int i = 0; i < 8; i++) {
-            cout << in2[i];
-        }
-        cout << endl;
-        cout << "carry: " << carry << endl;
-        bool* Generate = eightBitCarryGenerate(in1, in2, carry);
-        cout << "generate = ";
-        for (int i = 0; i < 8; i++) {
-            cout << Generate[i];
-        }
-        cout << "-" << Generate[8] << endl;
-        bool* Propogate = eightBitCarryPropogate(in1, in2, carry);
-        cout << "Propogate = ";
-        for (int i = 0; i < 8; i++) {
-            cout << Propogate[i];
-        }
-        cout << "-" << Propogate[8] << endl;
-        bool* lookAhead = eightBitCarryLookAhead(in1, in2, carry);
-        cout << "lookahead = ";
-        for (int i = 0; i < 8; i++) {
-            cout << lookAhead[i];
-        }
-        cout << "-" << lookAhead[8] << endl;
-        bool* lookAheadAdder = eightBitCarryLookAheadAdder(in1, in2, carry);
-        cout << "lookahead sum = ";
-        for (int i = 0; i < 8; i++) {
-            cout << lookAheadAdder[i];
-        }
-        cout << endl;
+    carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]));
+
+    carry[4] = generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0])));
+
+    carry[5] = generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]))));
+
+    carry[6] = generate[5] + propogate[5] * (/*carry[5]*/generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1]*  (/*carry[1]*/generate[0] + propogate[0] * carry[0])))));
+
+    carry[7] = generate[6] + propogate[6] * (/*carry[6]*/generate[5] + propogate[5] * (/*carry[5]*/generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]))))));
+
+    carry[8] = generate[7] + propogate[7] * (/*carry[7]*/generate[6] + propogate[6] * (/*carry[6]*/generate[5] + propogate[5] * (/*carry[5]*/generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0])))))));
+    for (int i = 0; i < 9; i++){
+        cout << carry[i];
     }
-    return 0;
+    return carry;
 }
+
 
 //Function definitions go down here.
 bool* CLA(bool* in1, bool* in2, bool* carry) {
