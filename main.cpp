@@ -66,7 +66,7 @@ bool* CLA(bool* in1, bool* in2, bool* carry) {
     return sum;
 }
 
-bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
+bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) { //working but still need to implement gate functions
     static bool carry[9];
     carry[0] = c0;
 
