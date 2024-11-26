@@ -27,6 +27,16 @@ bool XOR(bool in1, bool in2);
 bool OR(bool in1, bool in2);
 bool NOT(bool in);
 
+
+//Function definitions go down here.
+bool* CLA(bool* in1, bool* in2, bool* carry) {
+    static bool sum[8];
+    for (int i = 0; i < 8; i++) {
+        sum[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
+    }
+    return sum;
+}
+
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
     static bool carry[9];
     carry[0] = c0;
@@ -52,15 +62,6 @@ bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
     return carry;
 }
 
-
-//Function definitions go down here.
-bool* CLA(bool* in1, bool* in2, bool* carry) {
-    static bool sum[8];
-    for (int i = 0; i < 8; i++) {
-        sum[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
-    }
-    return sum;
-}
 
 bool* eightBitCarryGenerate(bool* in1, bool* in2) {
     static bool G[8]; 
