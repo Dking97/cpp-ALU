@@ -163,32 +163,20 @@ void replace(bool* in1, bool* in2){
         in1[i] = in2[i]; 
 }
 
-bool selector(bool* in1, bool* in2, bool* selector){ 
+bool selector( bool I0, bool I1, bool I2, bool I3, bool I4, bool I5, bool I6, bool* selector){ 
 	static bool S2 = selector[0], S1 = selector[1], S0 = selector[2];
 	static bool SI2 = NOT(S2), SI1 = NOT(S1), SI0 = NOT(SI0);
-	static bool output[8];
 	
-	if(AND(SI2, AND(SI1, SI0))){
-		
-	}
-	else if(AND(SI2, AND(SI1, S0 ))){
-		
-	}
-	else if(AND(SI2, AND(S1 , SI0))){
-		
-	}
-	else if(AND(SI2, AND(S1 , S0 ))){
-		
-	}
-	else if(AND(S2 , AND(SI1, SI0))){
-		replace(output, compare_A_B(in1, in2));
-	}
-	else if(AND(S2 , AND(SI1, S0 ))){
-		replace(output, eightBitNOT_A(in1));
-	}
-	else if(AND(S2 , AND(S1 , SI0))){
-		replace(output, eightBitNOT_B(in2));
-	}
+	return OR7(
+		AND4(I0, SI2, SI1, SI0),
+		AND4(I1, SI2, SI1, S0 ),
+		AND4(I2, SI2, S1 , SI0),
+		AND4(I3, SI2, S1 , S0 ),
+		AND4(I4, S2 , SI1, SI0),
+		AND4(I5, S2 , SI1, S0 ),
+		AND4(I6, S2 , S1 , S0 )
+	);
+	
 }
 
 
