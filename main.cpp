@@ -70,26 +70,27 @@ bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) { //work
     static bool carry[9];
     carry[0] = c0;
 
-    carry[1] = generate[0] + propogate[0] * carry[0];
+    carry[1] = OR(generate[0], AND(propogate[0], carry[0]));
     
-    carry[2] = generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]);
+    carry[2] = OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))));
 
-    carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]));
+    carry[3] = OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0]))))))));
 
-    carry[4] = generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0])));
+    carry[4] = OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))))))))));
 
-    carry[5] = generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]))));
+    carry[5] = OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0]))))))))))))));
 
-    carry[6] = generate[5] + propogate[5] * (/*carry[5]*/generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1]*  (/*carry[1]*/generate[0] + propogate[0] * carry[0])))));
+    carry[6] = OR(generate[5], AND(propogate[5], (/*carry[5]*/OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1],  (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))))))))))))))));
 
-    carry[7] = generate[6] + propogate[6] * (/*carry[6]*/generate[5] + propogate[5] * (/*carry[5]*/generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0]))))));
+    carry[7] = OR(generate[6], AND(propogate[6], (/*carry[6]*/OR(generate[5], AND(propogate[5], (/*carry[5]*/OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0]))))))))))))))))))));
 
-    carry[8] = generate[7] + propogate[7] * (/*carry[7]*/generate[6] + propogate[6] * (/*carry[6]*/generate[5] + propogate[5] * (/*carry[5]*/generate[4] + propogate[4] * (/*carry[4]*/generate[3] + propogate[3] * (/*carry[3]*/carry[3] = generate[2] + propogate[2] * (/*carry[2]*/generate[1] + propogate[1] * (/*carry[1]*/generate[0] + propogate[0] * carry[0])))))));
+    carry[8] = OR(generate[7], AND(propogate[7], (/*carry[7]*/OR(generate[6], AND(propogate[6], (/*carry[6]*/OR(generate[5], AND(propogate[5], (/*carry[5]*/OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))))))))))))))))))))));
     for (int i = 0; i < 9; i++){
         cout << carry[i];
     }
     return carry;
 }
+
 
 
 bool* eightBitCarryGenerate(bool* in1, bool* in2) {
