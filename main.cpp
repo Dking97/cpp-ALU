@@ -221,22 +221,27 @@ void replace(bool* in1, bool* in2){
         in1[i] = in2[i]; 
 }
 */
-bool selector( bool I0, bool I1, bool I2, bool I3, bool I4, bool I5, bool I6, bool* selector){ 
-	static bool S2 = selector[0], S1 = selector[1], S0 = selector[2];
-	static bool SI2 = NOT(S2), SI1 = NOT(S1), SI0 = NOT(SI0);
-	
-	return OR7(
-		AND4(I0, SI2, SI1, SI0),
-		AND4(I1, SI2, SI1, S0 ),
-		AND4(I2, SI2, S1 , SI0),
-		AND4(I3, SI2, S1 , S0 ),
-		AND4(I4, S2 , SI1, SI0),
-		AND4(I5, S2 , SI1, S0 ),
-		AND4(I6, S2 , S1 , S0 )
-	);
-	
+bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode) {
+    static bool result[9] = {0};
+    for(int i = 0; i < 9; i++) {
+        result[i] = mux(add[i], subtract[i], AND[i], OR[i], comparison[i], NOTA[i], NOTB[i], opCode);
+    }
+    return result;
 }
 
+bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA, bool NOTB, bool* opCode){ 
+	static bool notOpCode[3] = {NOT(opCode[0]), NOT(opCode[1]), NOT(opCode[2])};
+	
+	return OR7(
+		AND4(add, notOpCode[0], notOpCode[1], notOpCode[2]),
+		AND4(subtract, notOpCode[0], notOpCode[1], opCode[2] ),
+		AND4(AND, notOpCode[0], opCode[1] , notOpCode[2]),
+		AND4(OR, notOpCode[0], opCode[1] , opCode[2] ),
+		AND4(comparison, opCode[0] , notOpCode[1], notOpCode[2]),
+		AND4(NOTA, opCode[0] , notOpCode[1], opCode[2] ),
+		AND4(NOTB, opCode[0] , opCode[1] , notOpCode[2] )
+	)
+}
 
 //needs to take in the onesCompliment of in, just NOT in
 bool* twosCompliment(bool *in){
