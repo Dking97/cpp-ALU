@@ -59,7 +59,7 @@ int main() {
 
 //Function definitions go down here.
 bool* CLA(bool* in1, bool* in2, bool* carry) {
-    static bool sum[8];
+    static bool sum[9];
     for (int i = 0; i < 8; i++) {
         sum[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
     }
@@ -196,10 +196,16 @@ bool* twosCompliment(bool *in){
 
 bool* subtract(bool *in1, bool* in2){
     static bool[9] diff;
+    bool gen[8];
+    bool prop[8];
+    bool carrys[9];
 
     //in1>in2 in1 + 2's comp in2 discard MSB
     if (compare_A_B(in1,in2)[1] == 1){
         in2 = twosCompliment(eightBitNOT_A(in2));
+	prop = eightBitCarryPropogate(in1,in2);
+	gen = eightBitCarryGenerate(in1,in2);
+	carrys = carryLookAheadGenerator(prop,gen,0);
         diff = CLA(in1, in2, carrys);
         diff[0] = 0;
         return diff;
@@ -207,6 +213,9 @@ bool* subtract(bool *in1, bool* in2){
     //in1<in2 in1 + 2's comp in2, 2's comp step 1, add negative sign
     if(compare_A_B(in1,in2)[1] == 0){
         in2 = twosCompliment(eightBitNOT_A(in2));
+	prop = eightBitCarryPropogate(in1,in2);
+	gen = eightBitCarryGenerate(in1,in2);
+	carrys = carryLookAheadGenerator(prop,gen,0);
         diff = CLA(in1, in2, carrys);
         diff = twosCompliment(eightBitNOT_A(diff));
         diff[0] = NOT(diff[0]);
