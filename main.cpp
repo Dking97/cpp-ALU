@@ -174,9 +174,8 @@ bool CLA_propagate(bool A, bool B) {
     return XOR(A, B);
 }
 
-/*
 bool* compare_A_B(bool* in1, bool* in2){
-	bool compare[3] = {0};
+	static bool compare[3] = {0};
 	
 	for(int i = 7; i >= 0; i--){
 		if (NOT(XOR(in1[i], in2[i])) == 1){
@@ -192,10 +191,9 @@ bool* compare_A_B(bool* in1, bool* in2){
 		}
 	}
 	compare[0] = 1;
-	return compare; // 001 for B // 010 for A // 100 for B = A
-	
+	return compare; // 001 for B // 010 for A // 100 for B = A	
 }
-*/
+
 bool eightBitNOT_A(bool* in1){ // returns Not A
 	static bool NOT_A[8];
 	for(int i = 0; i < 8; i++){
@@ -217,8 +215,9 @@ bool eightBitNOT_B(bool* in2){ // returns Not B
 // 11/18/24 im not sure if im doing this right since the mux usually doenst take in a the entire 8 bits, it usually has an individual mux for each bit. - collin
 /*
 void replace(bool* in1, bool* in2){
-	for (i = 0; i < 8; i++) { 
-        in1[i] = in2[i]; 
+	for (int i = 0; i < 8; i++) { 
+        in1[i] = in2[i];
+	}
 }
 */
 bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode) {
