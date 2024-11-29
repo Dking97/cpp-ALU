@@ -8,24 +8,26 @@ using namespace std;
 //               define functions at the bottom! 
 
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0);
-bool* eightBitCarryPropogate(bool* in1, bool* in2, bool carry);
+bool* eightBitCarryPropogate(bool* in1, bool* in2);
 bool* eightBitCarryGenerate(bool* in1, bool* in2);
 bool CLA_generate(bool in1, bool in2);
-bool CLA_propogate(bool in1, bool in2, bool carry);
-//bool* fullAdder(bool in1, bool in2, bool carry); probably not need this
-
-bool eightBitNOT_B(bool* in2);
-bool eightBitNOT_A(bool* in1);
+bool CLA_propogate(bool in1, bool in2);
+bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA, bool NOTB, bool* opCode);
+bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode);
+bool* eightBitNOT_B(bool* in2);
+bool* eightBitNOT_A(bool* in1);
 void replace(bool* in1, bool* in2);
-bool* compare_A_B(bool* in1, bool* in2);
-bool selector(bool* in1, bool* in2, bool* selector);
-bool* subtract(bool *in1, bool* in2);
+//bool* compare_A_B(bool* in1, bool* in2);
+//bool* subtract(bool *in1, bool* in2);
 bool* twosCompliment(bool *in);
 bool* CLA(bool* in1, bool* in2, bool* carry);//returns sums
-bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
-bool XOR(bool in1, bool in2);
-bool OR(bool in1, bool in2);
-bool NOT(bool in);
+bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0); 
+
+
+//bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
+//bool XOR(bool in1, bool in2);
+//bool OR(bool in1, bool in2);
+//bool NOT(bool in);
 
 //main use this to test functions. (this just gets A B and opCode. write your own test lines.)
 int main() {
