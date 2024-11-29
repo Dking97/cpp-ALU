@@ -29,67 +29,124 @@ bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0);
 //bool OR(bool in1, bool in2);
 //bool NOT(bool in);
 
-//main use this to test functions. (this just gets A B and opCode. write your own test lines.)
+//main use this to test functions. 
 int main() {
-    bool Carry[9] = {0}; // carry 
+ 
+    
+    bool A[8];
+    bool B[8];
+    bool opCode[3];
+    bool empty[8] = {0};
+
+
     cout << "Enter A: ";
     string strA;
     cin >> strA;
-    bool A[8];
     for (int i = 0; i < 8; i++) {
         A[i] = (strA[i] == '1');  // Convert '1'/'0' to bool
     }
     cout << "Enter B: ";
     string B_str;
     cin >> B_str;
-    bool B[8];
     for (int i = 0; i < 8; i++) {
         B[i] = (B_str[i] == '1');  // Convert '1'/'0' to bool
     }
     cout << "Enter Opcode: ";
     string opCode_str;
     cin >> opCode_str;
-    bool opCode[3];
     for (int i = 0; i < 3; i++) {
         opCode[i] = (opCode_str[i] == '1');  // Convert '1'/'0' to bool
     }
+    bool* cla = CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0));
+    cout << " generate: ";
+    for(int i = 0; i < 8; i++) {
+        cout << eightBitCarryGenerate(A, B)[i];
+    }
+    cout << " Propogate: ";
+    for(int i = 0; i < 8; i++) {
+        cout << eightBitCarryPropogate(A, B)[i];
+    }
+    cout << " Carry Generator: ";
+    for(int i = 0; i < 9; i++) {
+        cout << carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)[i];
+    }
+    cout << " CLA: ";
+    for(int i = 0; i < 9; i++) {
+        cout << cla[i];
+    }
 
-    return 0;
-}
+
+    cout << endl;
+
+    bool* result = selector(
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+
 
 
 
 //Function definitions go down here.
 bool* CLA(bool* in1, bool* in2, bool* carry) {
     static bool sum[9];
-    for (int i = 0; i < 8; i++) {
-        sum[i] = XOR(XOR(in1[i], in2[i]), carry[i]);
+    sum[0] = carry[0]; // carry out
+    for (int i = 1; i < 9; i++) {
+        sum[i] = XOR(XOR(in1[i-1], in2[i-1]), carry[i]);
     }
     return sum;
 }
 
+
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) { //working but still need to implement gate functions
     static bool carry[9];
-    carry[0] = c0;
+    carry[8] = c0;
 
-    carry[1] = OR(generate[0], AND(propogate[0], carry[0]));
+    carry[7] = OR(generate[7], AND(propogate[7], carry[7]));
     
-    carry[2] = OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))));
+    carry[6] = OR(generate[6], AND(propogate[6], (
+                    /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))));
 
-    carry[3] = OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0]))))))));
+    carry[5] = OR(generate[5], AND(propogate[5], (
+                    /*carry[6]*/  OR(generate[6], AND(propogate[6], (
+                                /*carry[7]*/ OR(generate[7], AND(propogate[7], carry[7]))))))));
 
-    carry[4] = OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))))))))));
+    carry[4] = OR(generate[4], AND(propogate[4], (
+                    /*carry[5]*/ OR(generate[5], AND(propogate[5], (
+                                /*carry[6]*/OR(generate[6], AND(propogate[6], (
+                                            /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))))))))));
 
-    carry[5] = OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0]))))))))))))));
+    carry[3] = OR(generate[3], AND(propogate[3], (
+                    /*carry[4]*/ OR(generate[4], AND(propogate[4], (
+                                /*carry[5]*/ OR(generate[5], AND(propogate[5], (
+                                            /*carry[6]*/OR(generate[6], AND(propogate[6], (
+                                                        /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7]))))))))))))));
 
-    carry[6] = OR(generate[5], AND(propogate[5], (/*carry[5]*/OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1],  (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))))))))))))))));
+    carry[2] = OR(generate[2], AND(propogate[2], (
+                    /*carry[3]*/OR(generate[3], AND(propogate[3], (
+                                /*carry[4]*/OR(generate[4], AND(propogate[4], (
+                                            /*carry[5]*/ OR(generate[5], AND(propogate[5], (
+                                                        /*carry[6]*/OR(generate[6], AND(propogate[6],  (
+                                                                    /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))))))))))))))));
 
-    carry[7] = OR(generate[6], AND(propogate[6], (/*carry[6]*/OR(generate[5], AND(propogate[5], (/*carry[5]*/OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/ OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0]))))))))))))))))))));
+    carry[1] = OR(generate[1], AND(propogate[1], (
+                    /*carry[2]*/OR(generate[2], AND(propogate[2], (
+                                /*carry[3]*/OR(generate[3], AND(propogate[3], (
+                                            /*carry[4]*/OR(generate[4], AND(propogate[4], (
+                                                        /*carry[5]*/ OR(generate[5], AND(propogate[5], (
+                                                                    /*carry[6]*/OR(generate[6], AND(propogate[6], (
+                                                                                /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7]))))))))))))))))))));
 
-    carry[8] = OR(generate[7], AND(propogate[7], (/*carry[7]*/OR(generate[6], AND(propogate[6], (/*carry[6]*/OR(generate[5], AND(propogate[5], (/*carry[5]*/OR(generate[4], AND(propogate[4], (/*carry[4]*/OR(generate[3], AND(propogate[3], (/*carry[3]*/OR(generate[2], AND(propogate[2], (/*carry[2]*/OR(generate[1], AND(propogate[1], (/*carry[1]*/OR(generate[0], AND(propogate[0], carry[0])))))))))))))))))))))));
-  
+    carry[0] = OR(generate[0], AND(propogate[0], (
+                    /*carry[1]*/OR(generate[1], AND(propogate[1], (
+                                /*carry[2]*/OR(generate[2], AND(propogate[2], (
+                                            /*carry[3]*/OR(generate[3], AND(propogate[3], (
+                                                        /*carry[4]*/OR(generate[4], AND(propogate[4], (
+                                                                    /*carry[5]*/OR(generate[5], AND(propogate[5], (
+                                                                                /*carry[6]*/OR(generate[6], AND(propogate[6], (
+                                                                                            /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))))))))))))))))))))));
+
+    
     return carry;
 }
+
 
 
 
@@ -102,8 +159,8 @@ bool* eightBitCarryGenerate(bool* in1, bool* in2) {
 }
 
 bool* eightBitCarryPropogate(bool* in1, bool* in2) {
-    static bool prop[8];
-    for (int i = 0; i < 8;i++) {
+    static bool prop[9];
+    for (int i = 0; i < 8; i++) {
         prop[i] = XOR(in1[i], in2[i]); //the inputs are A and B
     }
     return prop;
@@ -117,7 +174,7 @@ bool CLA_propagate(bool A, bool B) {
     return XOR(A, B);
 }
 
-
+/*
 bool* compare_A_B(bool* in1, bool* in2){
 	bool compare[3] = {0};
 	
@@ -138,7 +195,7 @@ bool* compare_A_B(bool* in1, bool* in2){
 	return compare; // 001 for B // 010 for A // 100 for B = A
 	
 }
-
+*/
 bool eightBitNOT_A(bool* in1){ // returns Not A
 	static bool NOT_A[8];
 	for(int i = 0; i < 8; i++){
@@ -158,12 +215,12 @@ bool eightBitNOT_B(bool* in2){ // returns Not B
 }
 
 // 11/18/24 im not sure if im doing this right since the mux usually doenst take in a the entire 8 bits, it usually has an individual mux for each bit. - collin
-
+/*
 void replace(bool* in1, bool* in2){
 	for (i = 0; i < 8; i++) { 
         in1[i] = in2[i]; 
 }
-
+*/
 bool selector( bool I0, bool I1, bool I2, bool I3, bool I4, bool I5, bool I6, bool* selector){ 
 	static bool S2 = selector[0], S1 = selector[1], S0 = selector[2];
 	static bool SI2 = NOT(S2), SI1 = NOT(S1), SI0 = NOT(SI0);
@@ -195,7 +252,7 @@ bool* twosCompliment(bool *in){
     }
     return in;
 }
-
+/*
 bool* subtract(bool *in1, bool* in2){
     static bool[9] diff;
     bool gen[8];
@@ -231,3 +288,4 @@ bool* subtract(bool *in1, bool* in2){
 	return diff;
     }
 }
+*/
