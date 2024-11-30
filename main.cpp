@@ -245,7 +245,7 @@ bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA,
 //needs to take in the onesCompliment of in, just NOT in
 bool* twosCompliment(bool *in){
     bool carry = true;
-    for (int i = 0; i < in.size(); i++){
+    for (int i = 0; i < 8; i++){
         if (in[i] == true && carry == true){
             in[i] = false;
             carry = true;
@@ -256,40 +256,30 @@ bool* twosCompliment(bool *in){
     }
     return in;
 }
-/*
+
 bool* subtract(bool *in1, bool* in2){
-    static bool[9] diff;
-    bool gen[8];
-    bool prop[8];
-    bool carrys[9];
+    bool* diff;
 
     //in1>in2 in1 + 2's comp in2 discard MSB
     if (compare_A_B(in1,in2)[1] == 1){
         in2 = twosCompliment(eightBitNOT_A(in2));
-	prop = eightBitCarryPropogate(in1,in2);
-	gen = eightBitCarryGenerate(in1,in2);
-	carrys = carryLookAheadGenerator(prop,gen,0);
-        diff = CLA(in1, in2, carrys);
+        diff = CLA(in1, in2, carryLookAheadGenerator(eightBitCarryPropogate(in1,in2),eightBitCarryGenerate(in1,in2),0));
         diff[0] = 0;
         return diff;
     }
     //in1<in2 in1 + 2's comp in2, 2's comp step 1, add negative sign
     if(compare_A_B(in1,in2)[1] == 0){
         in2 = twosCompliment(eightBitNOT_A(in2));
-	prop = eightBitCarryPropogate(in1,in2);
-	gen = eightBitCarryGenerate(in1,in2);
-	carrys = carryLookAheadGenerator(prop,gen,0);
-        diff = CLA(in1, in2, carrys);
+        diff = CLA(in1, in2, carryLookAheadGenerator(eightBitCarryPropogate(in1,in2),eightBitCarryGenerate(in1,in2),0));
         diff = twosCompliment(eightBitNOT_A(diff));
         diff[0] = NOT(diff[0]);
         return diff;
     } 
     //in1==in2
-    if(compare_A_B(in1,in2)[0] == 1){
-        for(int i = 0; i < in1.size();i++){
+    else{
+        for(int i = 0; i < 9;i++){
             diff[i] = false;
         }
 	return diff;
     }
 }
-*/
