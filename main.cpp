@@ -17,8 +17,8 @@ bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison,
 bool* eightBitNOT_B(bool* in2);
 bool* eightBitNOT_A(bool* in1);
 void replace(bool* in1, bool* in2);
-//bool* compare_A_B(bool* in1, bool* in2);
-//bool* subtract(bool *in1, bool* in2);
+bool* compare_A_B(bool* in1, bool* in2);
+bool* subtract(bool *in1, bool* in2);
 bool* twosCompliment(bool *in);
 bool* CLA(bool* in1, bool* in2, bool* carry);//returns sums
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0); 
