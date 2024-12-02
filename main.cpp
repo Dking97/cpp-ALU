@@ -255,7 +255,48 @@ bool* twosCompliment(bool *in){
     }
     return in;
 }
-
+bool* addSubtract(bool* in1, bool* in2, bool CTR) { //debug cout statements will be deleted
+    cout << "CTR: " << CTR;
+    for (int i = 0; i < 8; i++){
+        in2[i] = XOR(in2[i], CTR);
+    }
+    cout << " XOR of B/CTR: ";
+    for (int i = 0; i < 8; i++){
+        cout << in2[i];
+    }
+    bool sum1[9] = {0};
+    for (int i = 0; i < 9; i++) {
+        sum1[i] = CLA(in1, in2, carryLookAheadGenerator(eightBitCarryGenerate(in1, in2),eightBitCarryPropogate(in1, in2), CTR))[i];
+    }
+    cout << " first CLA sum: ";
+    cout << sum1[0] << "-";
+    for (int i = 1; i < 9; i++){
+        cout << sum1[i];
+    }
+    bool sign = AND(CTR ,NOT(sum1[0]));
+    for (int i = 0; i < 9; i++){
+        sum1[i] = XOR(sum1[i], sign);
+    }
+    cout << " XOR of Sum1/sign: ";
+    for (int i = 0; i < 9; i++) {
+        cout << sum1[i];
+    }
+    static bool sum2[9] = {0};
+    for (int i = 0; i < 8; i++) {
+        in2[i] = sum1[i+1];
+    }
+    bool zero[9] = {0};
+    for (int i = 0; i < 9; i++) {
+        sum2[i] = CLA(zero, in2, carryLookAheadGenerator(eightBitCarryGenerate(zero, in2),eightBitCarryPropogate(zero, in2), sign))[i];
+    }
+    cout << " addSubtractResult: " << sign << "-";
+    for (int i = 1; i < 9; i++){
+        cout << sum2[i];
+    }
+    sum2[0] = sign;
+    return sum2;
+}
+/*i dont think we can use if statements, we have to make it based on the logic gates. compare A/B could be an input and then use that as logic but i think he wanted us to do it like the one above ^^^ 
 bool* subtract(bool *in1, bool* in2){
     bool* diff;
 
@@ -280,5 +321,5 @@ bool* subtract(bool *in1, bool* in2){
             diff[i] = false;
         }
 	return diff;
-    }
+    } */
 }
