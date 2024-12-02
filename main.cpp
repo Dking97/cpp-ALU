@@ -77,9 +77,15 @@ int main() {
 
 
     cout << endl;
-
-    bool* result = selector(
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+	bool* result = selector( //something is messed up with this. when i add addSubtract(A,B, CTR) to 001 it does all kinds of weird stuff.
+         addSubtract(A, B, 0), //this should work. put in CTR = 0 for adder CTR = 1 for subtraction.
+	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)));
+	return 0;
 
 
 
