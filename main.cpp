@@ -95,7 +95,7 @@ bool* CLA(bool* in1, bool* in2, bool* carry) {
 }
 
 
-bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) { //working but still need to implement gate functions
+bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
     static bool carry[9];
     carry[8] = c0;
 
@@ -212,7 +212,6 @@ bool eightBitNOT_B(bool* in2){ // returns Not B
 	return NOT_B;
 }
 
-// 11/18/24 im not sure if im doing this right since the mux usually doenst take in a the entire 8 bits, it usually has an individual mux for each bit. - collin
 /*
 void replace(bool* in1, bool* in2){
 	for (int i = 0; i < 8; i++) { 
