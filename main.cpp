@@ -7,6 +7,7 @@ using namespace std;
 //         delete // after you define one to use the declaration.
 //               define functions at the bottom! 
 
+bool* addSubtract(bool* in1, bool* in2, bool CTR);
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0);
 bool* eightBitCarryPropogate(bool* in1, bool* in2);
 bool* eightBitCarryGenerate(bool* in1, bool* in2);
@@ -46,7 +47,7 @@ int main() {
         A[i] = (strA[i] == '1');  // Convert '1'/'0' to bool
     }
     cout << "Enter B: ";
-    string B_str;
+     string B_str;
     cin >> B_str;
     for (int i = 0; i < 8; i++) {
         B[i] = (B_str[i] == '1');  // Convert '1'/'0' to bool
@@ -74,23 +75,75 @@ int main() {
     for(int i = 0; i < 9; i++) {
         cout << cla[i];
     }
-
+    
+    addSubtract(A, B, 0);
 
     cout << endl;
-	bool* result = selector( //something is messed up with this. when i add addSubtract(A,B, CTR) to 001 it does all kinds of weird stuff.
-         addSubtract(A, B, 0), //this should work. put in CTR = 0 for adder CTR = 1 for subtraction.
-	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-	 CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)));
-	return 0;
+/*
+    bool* result = selector(
+            addSubtract(A, B, 1),
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+            opCode);
+            */
+    return 0;
+} 
 
 
 
 
 //Function definitions go down here.
+
+
+bool* addSubtract(bool* in1, bool* in2, bool CTR) {
+    cout << "CTR: " << CTR;
+    for (int i = 0; i < 8; i++){
+        in2[i] = XOR(in2[i], CTR);
+    }
+    cout << " XOR of B/CTR: ";
+    for (int i = 0; i < 8; i++){
+        cout << in2[i];
+    }
+    bool sum1[9] = {0};
+    for (int i = 0; i < 9; i++) {
+        sum1[i] = CLA(in1, in2, carryLookAheadGenerator(eightBitCarryGenerate(in1, in2),eightBitCarryPropogate(in1, in2), CTR))[i];
+    }
+    cout << " first CLA sum: ";
+    cout << sum1[0] << "-";
+    for (int i = 1; i < 9; i++){
+        cout << sum1[i];
+    }
+    bool sign = AND(CTR ,NOT(sum1[0]));
+    for (int i = 0; i < 9; i++){
+        sum1[i] = XOR(sum1[i], sign);
+    }
+    cout << " XOR of Sum1/sign: ";
+    for (int i = 0; i < 9; i++) {
+        cout << sum1[i];
+    }
+    static bool sum2[9] = {0};
+    for (int i = 0; i < 8; i++) {
+        in2[i] = sum1[i+1];
+    }
+    bool zero[9] = {0};
+    for (int i = 0; i < 9; i++) {
+        sum2[i] = CLA(zero, in2, carryLookAheadGenerator(eightBitCarryGenerate(zero, in2),eightBitCarryPropogate(zero, in2), sign))[i];
+    }
+    cout << " addSubtractResult: " << sign << "-";
+    for (int i = 1; i < 9; i++){
+        cout << sum2[i];
+    }
+    sum2[0] = sign;
+    return sum2;
+}
+
+
+
+
 bool* CLA(bool* in1, bool* in2, bool* carry) {
     static bool sum[9];
     sum[0] = carry[0]; // carry out
@@ -105,32 +158,32 @@ bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
     static bool carry[9];
     carry[8] = c0;
 
-    carry[7] = OR(generate[7], AND(propogate[7], carry[7]));
+    carry[7] = OR(generate[7], AND(propogate[7], carry[8]));
     
     carry[6] = OR(generate[6], AND(propogate[6], (
-                    /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))));
+                    /*carry[7]*/OR(generate[7], AND(propogate[7], carry[8])))));
 
     carry[5] = OR(generate[5], AND(propogate[5], (
                     /*carry[6]*/  OR(generate[6], AND(propogate[6], (
-                                /*carry[7]*/ OR(generate[7], AND(propogate[7], carry[7]))))))));
+                                /*carry[7]*/ OR(generate[7], AND(propogate[7], carry[8]))))))));
 
     carry[4] = OR(generate[4], AND(propogate[4], (
                     /*carry[5]*/ OR(generate[5], AND(propogate[5], (
                                 /*carry[6]*/OR(generate[6], AND(propogate[6], (
-                                            /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))))))))));
+                                            /*carry[7]*/OR(generate[7], AND(propogate[7], carry[8])))))))))));
 
     carry[3] = OR(generate[3], AND(propogate[3], (
                     /*carry[4]*/ OR(generate[4], AND(propogate[4], (
                                 /*carry[5]*/ OR(generate[5], AND(propogate[5], (
                                             /*carry[6]*/OR(generate[6], AND(propogate[6], (
-                                                        /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7]))))))))))))));
+                                                        /*carry[7]*/OR(generate[7], AND(propogate[7], carry[8]))))))))))))));
 
     carry[2] = OR(generate[2], AND(propogate[2], (
                     /*carry[3]*/OR(generate[3], AND(propogate[3], (
                                 /*carry[4]*/OR(generate[4], AND(propogate[4], (
                                             /*carry[5]*/ OR(generate[5], AND(propogate[5], (
                                                         /*carry[6]*/OR(generate[6], AND(propogate[6],  (
-                                                                    /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7])))))))))))))))));
+                                                                    /*carry[7]*/OR(generate[7], AND(propogate[7], carry[8])))))))))))))))));
 
     carry[1] = OR(generate[1], AND(propogate[1], (
                     /*carry[2]*/OR(generate[2], AND(propogate[2], (
@@ -138,7 +191,7 @@ bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
                                             /*carry[4]*/OR(generate[4], AND(propogate[4], (
                                                         /*carry[5]*/ OR(generate[5], AND(propogate[5], (
                                                                     /*carry[6]*/OR(generate[6], AND(propogate[6], (
-                                                                                /*carry[7]*/OR(generate[7], AND(propogate[7], carry[7]))))))))))))))))))));
+                                                                                /*carry[7]*/OR(generate[7], AND(propogate[7], carry[8]))))))))))))))))))));
 
     carry[0] = OR(generate[0], AND(propogate[0], (
                     /*carry[1]*/OR(generate[1], AND(propogate[1], (
@@ -194,13 +247,13 @@ bool* compare_A_B(bool* in1, bool* in2){
 				compare[2] = 1;
 				return compare; // B is bigger than A
 			} 
-		}
+            		}
 	}
 	compare[0] = 1;
 	return compare; // 001 for B // 010 for A // 100 for B = A	
 }
 
-bool eightBitNOT_A(bool* in1){ // returns Not A
+bool* eightBitNOT_A(bool* in1){ // returns Not A
 	static bool NOT_A[8];
 	for(int i = 0; i < 8; i++){
 		NOT_A[i] = NOT(in1[i]);
@@ -209,7 +262,7 @@ bool eightBitNOT_A(bool* in1){ // returns Not A
 	return NOT_A;
 }
 
-bool eightBitNOT_B(bool* in2){ // returns Not B
+bool* eightBitNOT_B(bool* in2){ // returns Not B
 	static bool NOT_B[8];
 	for(int i = 0; i < 8; i++){
 		NOT_B[i] = NOT(in2[i]);
@@ -244,7 +297,7 @@ bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA,
 		AND4(comparison, opCode[0] , notOpCode[1], notOpCode[2]),
 		AND4(NOTA, opCode[0] , notOpCode[1], opCode[2] ),
 		AND4(NOTB, opCode[0] , opCode[1] , notOpCode[2] )
-	)
+	);
 }
 
 //needs to take in the onesCompliment of in, just NOT in
@@ -261,48 +314,7 @@ bool* twosCompliment(bool *in){
     }
     return in;
 }
-bool* addSubtract(bool* in1, bool* in2, bool CTR) { //debug cout statements will be deleted
-    cout << "CTR: " << CTR;
-    for (int i = 0; i < 8; i++){
-        in2[i] = XOR(in2[i], CTR);
-    }
-    cout << " XOR of B/CTR: ";
-    for (int i = 0; i < 8; i++){
-        cout << in2[i];
-    }
-    bool sum1[9] = {0};
-    for (int i = 0; i < 9; i++) {
-        sum1[i] = CLA(in1, in2, carryLookAheadGenerator(eightBitCarryGenerate(in1, in2),eightBitCarryPropogate(in1, in2), CTR))[i];
-    }
-    cout << " first CLA sum: ";
-    cout << sum1[0] << "-";
-    for (int i = 1; i < 9; i++){
-        cout << sum1[i];
-    }
-    bool sign = AND(CTR ,NOT(sum1[0]));
-    for (int i = 0; i < 9; i++){
-        sum1[i] = XOR(sum1[i], sign);
-    }
-    cout << " XOR of Sum1/sign: ";
-    for (int i = 0; i < 9; i++) {
-        cout << sum1[i];
-    }
-    static bool sum2[9] = {0};
-    for (int i = 0; i < 8; i++) {
-        in2[i] = sum1[i+1];
-    }
-    bool zero[9] = {0};
-    for (int i = 0; i < 9; i++) {
-        sum2[i] = CLA(zero, in2, carryLookAheadGenerator(eightBitCarryGenerate(zero, in2),eightBitCarryPropogate(zero, in2), sign))[i];
-    }
-    cout << " addSubtractResult: " << sign << "-";
-    for (int i = 1; i < 9; i++){
-        cout << sum2[i];
-    }
-    sum2[0] = sign;
-    return sum2;
-}
-/*i dont think we can use if statements, we have to make it based on the logic gates. compare A/B could be an input and then use that as logic but i think he wanted us to do it like the one above ^^^ 
+
 bool* subtract(bool *in1, bool* in2){
     bool* diff;
 
@@ -327,5 +339,5 @@ bool* subtract(bool *in1, bool* in2){
             diff[i] = false;
         }
 	return diff;
-    } */
+    }
 }
