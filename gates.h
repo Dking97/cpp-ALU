@@ -27,4 +27,12 @@ inline bool OR7(bool in1, bool in2, bool in3, bool in4, bool in5, bool in6, bool
     return in1 || in2 || in3 || in4 || in5 || in6 || in7; // OR operation
 }
 
+bool OR8(bool* in) {
+    return in[0] || in[1] || in[2] || in[3] || in[4] || in[5] || in[6] || in[7]; // OR operation
+}
+
+bool AND8(bool* in) {
+    return in[0] && in[1] && in[2] && in[3] && in[4] && in[5] && in[6] && in[7]; // AND operation
+}
+
 #endif // GATES_H
