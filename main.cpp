@@ -18,7 +18,10 @@ bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison,
 bool* eightBitNOT_B(bool* in2);
 bool* eightBitNOT_A(bool* in1);
 void replace(bool* in1, bool* in2);
-bool* compare_A_B(bool* in1, bool* in2);
+bool equalBit(bool in1, bool in2);
+bool greaterThanBit(bool in1, bool in2);
+bool lessThanBit(bool in1, bool in2);
+bool* eightBitCompare(bool* in1, bool* in2);
 bool* subtract(bool *in1, bool* in2);
 bool* twosCompliment(bool *in);
 bool* CLA(bool* in1, bool* in2, bool* carry);//returns sums
@@ -233,24 +236,34 @@ bool CLA_propagate(bool A, bool B) {
     return XOR(A, B);
 }
 
-bool* compare_A_B(bool* in1, bool* in2){
-	static bool compare[3] = {0};
-	
-	for(int i = 7; i >= 0; i--){
-		if (NOT(XOR(in1[i], in2[i])) == 1){
-			continue;
-		} else {
-			if (in1[i] > in2[i]){
-				compare[1] = 1;
-				return compare; // A is bigger than B
-			} else {
-				compare[2] = 1;
-				return compare; // B is bigger than A
-			} 
-            		}
-	}
-	compare[0] = 1;
-	return compare; // 001 for B // 010 for A // 100 for B = A	
+bool equalBit(bool in1, bool in2){
+    return NOT(XOR(in1,in2));
+}
+
+bool greaterThanBit(bool in1, bool in2){
+    return AND(in1,NOT(in2));
+}
+
+bool lessThanBit(bool in1, bool in2){
+    return AND(NOT(in1),in2);
+}
+
+bool* eightBitCompare(bool* in1, bool* in2){
+    bool compare[3] = {0};
+    bool greater[8] = {0};
+    bool less[8] = {0};
+    bool equal[8] = {0};
+
+    for (int i = 0; i < 8; i++){
+        greater[i] = greaterThanBit(in1[i],in2[i]);
+        less[i] = lessThanBit(in1[i],in2[i]);        
+        equal[i] = equalBit(in1[i],in2[i]);
+    }
+
+    //100 A>B, 010 A<B, 001 A=B
+    compare[0] = OR8(greater);
+    compare[1] = OR8(less);
+    compare[2] = AND8(equal);
 }
 
 bool* eightBitNOT_A(bool* in1){ // returns Not A
