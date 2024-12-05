@@ -123,60 +123,46 @@ bool* eightBit_OR_AB(bool* in1, bool* in2){
 	return OR_AB;
 }
 
-
-bool* addSubtract(bool* in1, bool* in2, bool CTR) {
-    cout << "CTR: " << CTR;
-    for (int i = 0; i < 8; i++){
-        in2[i] = XOR(in2[i], CTR);
-    }
-    cout << " XOR of B/CTR: ";
-    for (int i = 0; i < 8; i++){
-        cout << in2[i];
-    }
-    bool sum1[9] = {0};
-    for (int i = 0; i < 9; i++) {
-        sum1[i] = CLA(in1, in2, carryLookAheadGenerator(eightBitCarryGenerate(in1, in2),eightBitCarryPropogate(in1, in2), CTR))[i];
-    }
-    cout << " first CLA sum: ";
-    cout << sum1[0] << "-";
-    for (int i = 1; i < 9; i++){
-        cout << sum1[i];
-    }
-    bool sign = AND(CTR ,NOT(sum1[0]));
-    for (int i = 0; i < 9; i++){
-        sum1[i] = XOR(sum1[i], sign);
-    }
-    cout << " XOR of Sum1/sign: ";
-    for (int i = 0; i < 9; i++) {
-        cout << sum1[i];
-    }
-    static bool sum2[9] = {0};
+bool* CLA(bool* in1, bool* in2, bool C) {
+    bool B[8];
     for (int i = 0; i < 8; i++) {
-        in2[i] = sum1[i+1];
+        B[i] = XOR(in2[i], C);
     }
-    bool zero[9] = {0};
+    bool* generate = eightBitCarryGenerate(in1, B);
+    bool* propogate = eightBitCarryPropogate(in1, B);
+    bool* carry = carryLookAheadGenerator(generate, propogate, C); 
+    static bool sum[10];
+    sum[1] = carry[0]; // carry out flag
+    sum[0] = XOR(carry[0], carry[1]); //overflow flag
+    for (int i = 2; i < 10; i++) {
+        sum[i] = XOR(XOR(in1[i-2], B[i-2]), carry[i-1]);
+    }
+    cout << endl << "carry generator: ";
     for (int i = 0; i < 9; i++) {
-        sum2[i] = CLA(zero, in2, carryLookAheadGenerator(eightBitCarryGenerate(zero, in2),eightBitCarryPropogate(zero, in2), sign))[i];
-    }
-    cout << " addSubtractResult: " << sign << "-";
-    for (int i = 1; i < 9; i++){
-        cout << sum2[i];
-    }
-    sum2[0] = sign;
-    return sum2;
-}
-
-
-
-
-bool* CLA(bool* in1, bool* in2, bool* carry) {
-    static bool sum[9];
-    sum[0] = carry[0]; // carry out
-    for (int i = 1; i < 9; i++) {
-        sum[i] = XOR(XOR(in1[i-1], in2[i-1]), carry[i]);
-    }
+       cout << carry[i];
+    } 
     return sum;
 }
+
+	
+    bool* generate = eightBitCarryGenerate(in1, B);
+    bool* propogate = eightBitCarryPropogate(in1, B);
+    bool* carry = carryLookAheadGenerator(generate, propogate, C); 
+    static bool sum[10];
+    sum[1] = carry[0]; // carry out flag
+    sum[0] = XOR(carry[0], carry[1]); //overflow flag
+    for (int i = 2; i < 10; i++) {
+        sum[i] = XOR(XOR(in1[i-2], B[i-2]), carry[i-1]);
+    }
+   cout << endl << "carry generator: ";
+   for (int i = 0; i < 9; i++) {
+       cout << carry[i];
+   }
+ 
+       return sum;
+}
+
+
 
 
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
