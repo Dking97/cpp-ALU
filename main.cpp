@@ -15,14 +15,11 @@ bool CLA_generate(bool in1, bool in2);
 bool CLA_propogate(bool in1, bool in2);
 bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA, bool NOTB, bool* opCode);
 bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode);
-bool* eightBitNOT_B(bool* in2);
-bool* eightBitNOT_A(bool* in1);
-void replace(bool* in1, bool* in2);
+bool* eightBitNOT(bool* in1);
 bool equalBit(bool in1, bool in2);
 bool greaterThanBit(bool in1, bool in2);
 bool lessThanBit(bool in1, bool in2);
 bool* eightBitCompare(bool* in1, bool* in2);
-bool* subtract(bool *in1, bool* in2);
 bool* twosCompliment(bool *in);
 bool* CLA(bool* in1, bool* in2, bool* carry);//returns sums
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0); 
@@ -273,31 +270,14 @@ bool* eightBitCompare(bool* in1, bool* in2){
     compare[2] = AND8(equal);
 }
 
-bool* eightBitNOT_A(bool* in1){ // returns Not A
-	static bool NOT_A[8];
+bool* eightBitNOT(bool* in1){ 
+	static bool out[8];
 	for(int i = 0; i < 8; i++){
-		NOT_A[i] = NOT(in1[i]);
-		cout << NOT_A[i];
+		out[i] = NOT(in1[i]);
 	}
-	return NOT_A;
+	return out;
 }
 
-bool* eightBitNOT_B(bool* in2){ // returns Not B
-	static bool NOT_B[8];
-	for(int i = 0; i < 8; i++){
-		NOT_B[i] = NOT(in2[i]);
-		cout << NOT_B[i];
-	}
-	return NOT_B;
-}
-
-/*
-void replace(bool* in1, bool* in2){
-	for (int i = 0; i < 8; i++) { 
-        in1[i] = in2[i];
-	}
-}
-*/
 bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode) {
     static bool result[9] = {0};
     for(int i = 0; i < 9; i++) {
@@ -320,23 +300,6 @@ bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA,
 	);
 }
 
-//needs to take in the onesCompliment of in, just NOT in
-bool* twosCompliment(bool *in){
-    bool carry = true;
-    for (int i = 0; i < 8; i++){
-        if (in[i] == true && carry == true){
-            in[i] = false;
-            carry = true;
-        } else if(in[i] == false && carry == true){
-            in[i] = true;
-            carry = false;
-        }
-    }
-    return in;
-}
-
-bool* subtract(bool *in1, bool* in2){
-    bool* diff;
 
     //in1>in2 in1 + 2's comp in2 discard MSB
     if (compare_A_B(in1,in2)[1] == 1){
