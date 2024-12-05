@@ -7,7 +7,7 @@ using namespace std;
 //         delete // after you define one to use the declaration.
 //               define functions at the bottom! 
 
-bool* addSubtract(bool* in1, bool* in2, bool CTR);
+
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0);
 bool* eightBitCarryPropogate(bool* in1, bool* in2);
 bool* eightBitCarryGenerate(bool* in1, bool* in2);
@@ -61,7 +61,7 @@ int main() {
     for (int i = 0; i < 3; i++) {
         opCode[i] = (opCode_str[i] == '1');  // Convert '1'/'0' to bool
     }
-    bool* cla = CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0));
+    bool* cla = CLA(A, B, 0);
     cout << " generate: ";
     for(int i = 0; i < 8; i++) {
         cout << eightBitCarryGenerate(A, B)[i];
@@ -79,9 +79,8 @@ int main() {
         cout << cla[i];
     }
     
-    addSubtract(A, B, 0);
 
-    cout << endl;
+    
 /*
     bool* result = selector(
             addSubtract(A, B, 1),
