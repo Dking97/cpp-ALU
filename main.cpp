@@ -140,27 +140,6 @@ bool* CLA(bool* in1, bool* in2, bool C) {
     return sum;
 }
 
-	
-    bool* generate = eightBitCarryGenerate(in1, B);
-    bool* propogate = eightBitCarryPropogate(in1, B);
-    bool* carry = carryLookAheadGenerator(generate, propogate, C); 
-    static bool sum[10];
-    sum[1] = carry[0]; // carry out flag
-    sum[0] = XOR(carry[0], carry[1]); //overflow flag
-    for (int i = 2; i < 10; i++) {
-        sum[i] = XOR(XOR(in1[i-2], B[i-2]), carry[i-1]);
-    }
-   cout << endl << "carry generator: ";
-   for (int i = 0; i < 9; i++) {
-       cout << carry[i];
-   }
- 
-       return sum;
-}
-
-
-
-
 bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0) {
     static bool carry[9];
     carry[8] = c0;
