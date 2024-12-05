@@ -102,6 +102,28 @@ int main() {
 //Function definitions go down here.
 
 
+
+bool* eightBit_AND_AB(bool* in1, bool* in2){
+	static bool AND_AB[8];
+	for(int i = 0; i < 8; i++){
+		AND_AB[i] = AND(in1[i], in2[i]);
+		// cout << AND_AB[i];
+	}
+	
+	return AND_AB;
+}
+
+bool* eightBit_OR_AB(bool* in1, bool* in2){
+	static bool OR_AB[8];
+	for(int i = 0; i < 8; i++){
+		OR_AB[i] = OR(in1[i], in2[i]);
+		// cout << OR_AB[i];
+	}
+	
+	return OR_AB;
+}
+
+
 bool* addSubtract(bool* in1, bool* in2, bool CTR) {
     cout << "CTR: " << CTR;
     for (int i = 0; i < 8; i++){
