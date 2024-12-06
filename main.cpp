@@ -1,5 +1,6 @@
 #include "gates.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -14,15 +15,16 @@ bool* eightBitCarryGenerate(bool* in1, bool* in2);
 bool CLA_generate(bool in1, bool in2);
 bool CLA_propogate(bool in1, bool in2);
 bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA, bool NOTB, bool* opCode);
-bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode);
-bool* eightBitNOT(bool* in1);
+vector<bool> selector(const vector<bool> add, const vector<bool> subtract, const vector<bool> AND, const vector<bool> OR, const vector<bool> comparison, const vector<bool> NOTA, const vector<bool> NOTB, bool* opCode);
+vector<bool> eightBitNOT(bool* in1);
 bool equalBit(bool in1, bool in2);
 bool greaterThanBit(bool in1, bool in2);
 bool lessThanBit(bool in1, bool in2);
-bool* eightBitCompare(bool* in1, bool* in2);
-bool* twosCompliment(bool *in);
-bool* CLA(bool* in1, bool* in2, bool* carry);//returns sums
-bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0); 
+vector<bool> eightBitCompare(const bool* in1,const bool* in2);
+vector<bool> CLA(bool* in1, bool* in2, bool C);//returns sums
+bool* carryLookAheadGenerator(bool* generate, bool* propogate, bool c0);
+vector<bool> eightBit_AND_AB(const bool* in1,const bool* in2);
+vector<bool> eightBit_OR_AB(const bool* in1,const bool* in2);
 
 
 //bool AND(bool in1, bool in2); //Gate functions are already defined in "gates.h" header.
@@ -58,37 +60,25 @@ int main() {
     for (int i = 0; i < 3; i++) {
         opCode[i] = (opCode_str[i] == '1');  // Convert '1'/'0' to bool
     }
-    bool* cla = CLA(A, B, 0);
-    cout << " generate: ";
-    for(int i = 0; i < 8; i++) {
-        cout << eightBitCarryGenerate(A, B)[i];
-    }
-    cout << " Propogate: ";
-    for(int i = 0; i < 8; i++) {
-        cout << eightBitCarryPropogate(A, B)[i];
-    }
-    cout << " Carry Generator: ";
-    for(int i = 0; i < 9; i++) {
-        cout << carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)[i];
-    }
-    cout << " CLA: ";
-    for(int i = 0; i < 9; i++) {
-        cout << cla[i];
-    }
-    
-
-    
-/*
-    bool* result = selector(
-            addSubtract(A, B, 1),
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
-            CLA(A, B, carryLookAheadGenerator(eightBitCarryGenerate(A, B),eightBitCarryPropogate(A, B), 0)),
+        
+    vector<bool> result = selector(
+            CLA(A, B, 0),
+            CLA(A, B, 1),
+            eightBit_AND_AB(A, B),
+            eightBit_OR_AB(A,  B),
+            eightBitCompare(A, B),
+            eightBitNOT(A),
+            eightBitNOT(B),
             opCode);
-            */
+            
+    cout << " result: ";
+
+    for(int i = 0; i < 10; i++) {
+        cout << result[i];
+    }
+
+    cout << endl;
+    
     return 0;
 } 
 
@@ -99,8 +89,8 @@ int main() {
 
 
 
-bool* eightBit_AND_AB(bool* in1, bool* in2){
-	static bool AND_AB[8];
+vector<bool> eightBit_AND_AB(const bool* in1, const bool* in2){
+	vector<bool> AND_AB(8);
 	for(int i = 0; i < 8; i++){
 		AND_AB[i] = AND(in1[i], in2[i]);
 		// cout << AND_AB[i];
@@ -109,8 +99,8 @@ bool* eightBit_AND_AB(bool* in1, bool* in2){
 	return AND_AB;
 }
 
-bool* eightBit_OR_AB(bool* in1, bool* in2){
-	static bool OR_AB[8];
+vector<bool> eightBit_OR_AB(const bool* in1,const bool* in2){
+	vector<bool> OR_AB(8);
 	for(int i = 0; i < 8; i++){
 		OR_AB[i] = OR(in1[i], in2[i]);
 		// cout << OR_AB[i];
@@ -119,7 +109,7 @@ bool* eightBit_OR_AB(bool* in1, bool* in2){
 	return OR_AB;
 }
 
-bool* CLA(bool* in1, bool* in2, bool C) {
+vector<bool> CLA(bool* in1, bool* in2, bool C) {
     bool B[8];
     for (int i = 0; i < 8; i++) {
         B[i] = XOR(in2[i], C);
@@ -127,16 +117,13 @@ bool* CLA(bool* in1, bool* in2, bool C) {
     bool* generate = eightBitCarryGenerate(in1, B);
     bool* propogate = eightBitCarryPropogate(in1, B);
     bool* carry = carryLookAheadGenerator(generate, propogate, C); 
-    static bool sum[10];
+    vector<bool> sum(10);
     sum[1] = carry[0]; // carry out flag
     sum[0] = XOR(carry[0], carry[1]); //overflow flag
     for (int i = 2; i < 10; i++) {
         sum[i] = XOR(XOR(in1[i-2], B[i-2]), carry[i-1]);
     }
-    cout << endl << "carry generator: ";
-    for (int i = 0; i < 9; i++) {
-       cout << carry[i];
-    } 
+    
     return sum;
 }
 
@@ -231,8 +218,8 @@ bool lessThanBit(bool in1, bool in2){
     return AND(NOT(in1),in2);
 }
 
-bool* eightBitCompare(bool* in1, bool* in2){
-    bool compare[3] = {0};
+vector<bool> eightBitCompare(const bool* in1,const bool* in2){
+    vector<bool> compare(3);
     bool greater[8] = {0};
     bool less[8] = {0};
     bool equal[8] = {0};
@@ -247,19 +234,21 @@ bool* eightBitCompare(bool* in1, bool* in2){
     compare[0] = OR8(greater);
     compare[1] = OR8(less);
     compare[2] = AND8(equal);
+
+    return compare;
 }
 
-bool* eightBitNOT(bool* in1){ 
-	static bool out[8];
+vector<bool> eightBitNOT(bool* in1){ 
+	vector<bool> out(8);
 	for(int i = 0; i < 8; i++){
 		out[i] = NOT(in1[i]);
-	}
+	}   
 	return out;
 }
 
-bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison, bool* NOTA, bool*NOTB, bool* opCode) {
-    static bool result[9] = {0};
-    for(int i = 0; i < 9; i++) {
+vector<bool> selector(const vector<bool> add, const vector<bool> subtract, const vector<bool> AND, const vector<bool> OR, const vector<bool> comparison, const vector<bool> NOTA, const vector<bool> NOTB, bool* opCode) {
+    vector<bool> result(10);
+    for(int i = 0; i < 10; i++) {
         result[i] = mux(add[i], subtract[i], AND[i], OR[i], comparison[i], NOTA[i], NOTB[i], opCode);
     }
     return result;
@@ -267,7 +256,7 @@ bool* selector(bool* add, bool* subtract, bool* AND, bool* OR, bool* comparison,
 
 bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA, bool NOTB, bool* opCode){ 
 	static bool notOpCode[3] = {NOT(opCode[0]), NOT(opCode[1]), NOT(opCode[2])};
-	
+
 	return OR7(
 		AND4(add, notOpCode[0], notOpCode[1], notOpCode[2]),
 		AND4(subtract, notOpCode[0], notOpCode[1], opCode[2] ),
@@ -276,6 +265,6 @@ bool mux(bool add, bool subtract, bool AND, bool OR, bool comparison, bool NOTA,
 		AND4(comparison, opCode[0] , notOpCode[1], notOpCode[2]),
 		AND4(NOTA, opCode[0] , notOpCode[1], opCode[2] ),
 		AND4(NOTB, opCode[0] , opCode[1] , notOpCode[2] )
-	);
+    );
+    
 }
-
