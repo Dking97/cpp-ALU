@@ -4,27 +4,47 @@ using namespace std;
 
 //Gate Logic
 
-inline bool NOT(bool in) {
+bool NOT(bool in) {
     return !in; // NOT operation
 }
 
-inline bool AND(bool in1, bool in2) {
+bool AND(bool in1, bool in2) {
     return in1 && in2; // AND operation
 }
 
-inline bool OR(bool in1, bool in2) {
+bool OR(bool in1, bool in2) {
     return in1 || in2; // OR operation
 }
 
-inline bool XOR(bool in1, bool in2) {
+bool XOR(bool in1, bool in2) {
     return in1 ^ in2; // XOR operation
 }
 
-inline bool AND4(bool in1, bool in2, bool in3, bool in4) {
+bool AND3(bool in1, bool in2, bool in3){
+    return in1 && in2 && in3;
+}
+
+bool AND4(bool in1, bool in2, bool in3, bool in4) {
     return in1 && in2 && in3 && in4;
 }
 
-inline bool OR7(bool in1, bool in2, bool in3, bool in4, bool in5, bool in6, bool in7) {
+bool AND5(bool in1, bool in2, bool in3, bool in4, bool in5){
+    return in1 && in2 && in3 && in4 && in5;
+}
+
+bool AND6(bool in1, bool in2, bool in3, bool in4, bool in5, bool in6){
+    return in1 && in2 && in3 && in4 && in5 && in6;
+}
+
+bool AND7(bool in1, bool in2, bool in3, bool in4, bool in5, bool in6, bool in7){
+    return in1 && in2 && in3 && in4 && in5 && in6 && in7;
+}
+
+bool AND81(bool in1, bool in2, bool in3, bool in4, bool in5, bool in6, bool in7, bool in8){
+    return in1 && in2 && in3 && in4 && in5 && in6 && in7 && in8;
+}
+
+bool OR7(bool in1, bool in2, bool in3, bool in4, bool in5, bool in6, bool in7) {
     return in1 || in2 || in3 || in4 || in5 || in6 || in7;
 }
 
@@ -119,7 +139,7 @@ int main() {
         cout << (Y_bits[i] ? '1' : '0');
     }
     cout << endl;
-    cout << "Comparison bits: " << comp1 << comp0 << endl;
+    cout << "Comparison bits: " << comp0 << comp1 << endl;
 
     return 0;
 }
@@ -232,14 +252,53 @@ bool lessThanBit(bool in1, bool in2) {
 }
 
 vector<bool> eightBitCompare(const bool* in1, const bool* in2) {
-    bool greater[8] = { 0 };
+    bool greater[8] = {0};
     bool less[8] = { 0 };
     bool equal[8] = { 0 };
 
-    for (int i = 0; i < 8; i++) {
-        greater[i] = greaterThanBit(in1[i], in2[i]);
-        less[i] = lessThanBit(in1[i], in2[i]);
-        equal[i] = equalBit(in1[i], in2[i]);
+    for (int i = 0; i < 8; i++){
+        switch(i){
+            case 0:
+                greater[i] = greaterThanBit(in1[i], in2[i]);
+                less[i] = lessThanBit(in1[i], in2[i]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 1:
+                greater[i] = AND(greaterThanBit(in1[i],in2[i]),equal[i-1]);
+                less[i] = AND(lessThanBit(in1[i],in2[i]),equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 2:
+                greater[i] = AND3(greaterThanBit(in1[i],in2[i]),equal[i-2],equal[i-1]);
+                less[i] = AND3(lessThanBit(in1[i],in2[i]),equal[i-2],equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 3:
+                greater[i] = AND4(greaterThanBit(in1[i],in2[i]),equal[i-3],equal[i-2],equal[i-1]);
+                less[i] = AND4(lessThanBit(in1[i],in2[i]),equal[i-3],equal[i-2],equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 4:
+                greater[i] = AND5(greaterThanBit(in1[i],in2[i]),equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                less[i] = AND5(lessThanBit(in1[i],in2[i]),equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 5:
+                greater[i] = AND6(greaterThanBit(in1[i],in2[i]),equal[i-5],equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                less[i] = AND6(lessThanBit(in1[i],in2[i]),equal[i-5],equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 6:
+                greater[i] = AND7(greaterThanBit(in1[i],in2[i]),equal[i-6],equal[i-5],equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                less[i] = AND7(lessThanBit(in1[i],in2[i]),equal[i-6],equal[i-5],equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+            case 7:
+                greater[i] = AND81(greaterThanBit(in1[i],in2[i]),equal[i-7],equal[i-6],equal[i-5],equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                less[i] = AND81(lessThanBit(in1[i],in2[i]),equal[i-7],equal[i-6],equal[i-5],equal[i-4],equal[i-3],equal[i-2],equal[i-1]);
+                equal[i] = equalBit(in1[i],in2[i]);
+                continue;
+        }
     }
 
     bool A_greater = OR8(greater);
